@@ -19,10 +19,19 @@ export interface ZodiacMeta {
   dates: string;
 }
 
+export interface LuckyInfo {
+  color: string;
+  number: number;
+  item: string;
+}
+
 export interface Fortune {
-  sign: ZodiacSign;
-  content: string;
-  date: string;
+  energy: string;
+  advice: string;
+  caution: string;
+  relationship: string;
+  career: string;
+  lucky: LuckyInfo;
 }
 
 export interface FortuneData {
