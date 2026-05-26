@@ -1,13 +1,22 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import type { Fortune } from '@/features/horoscope/zodiac/types';
 
 interface FortuneCardProps {
   symbol: string;
   label: string;
   dates: string;
-  content: string;
+  fortune: Fortune;
 }
 
-const FortuneCard = ({ symbol, label, dates, content }: FortuneCardProps) => {
+const FortuneCard = ({ symbol, label, dates, fortune }: FortuneCardProps) => {
+  const sections = [
+    { label: '오늘의 에너지', text: fortune.energy },
+    { label: '조언', text: fortune.advice },
+    { label: '주의', text: fortune.caution },
+    { label: '연애·관계', text: fortune.relationship },
+    { label: '직업·재정', text: fortune.career },
+  ];
+
   return (
     <Card className="border border-accent-lavender/30 bg-surface-elevated rounded-xl">
       <CardHeader className="pb-2">
@@ -19,8 +28,19 @@ const FortuneCard = ({ symbol, label, dates, content }: FortuneCardProps) => {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-base leading-relaxed text-body">{content}</p>
+      <CardContent className="space-y-4">
+        {sections.map(({ label: sectionLabel, text }) => (
+          <div key={sectionLabel}>
+            <p className="text-xs font-medium text-accent-gold mb-1">{sectionLabel}</p>
+            <p className="text-sm leading-relaxed text-body">{text}</p>
+          </div>
+        ))}
+        <div>
+          <p className="text-xs font-medium text-accent-gold mb-1">행운</p>
+          <p className="text-sm text-body">
+            {fortune.lucky.color} · {fortune.lucky.number} · {fortune.lucky.item}
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
