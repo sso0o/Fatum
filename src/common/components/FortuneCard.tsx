@@ -10,11 +10,11 @@ interface FortuneCardProps {
 
 const FortuneCard = ({ symbol, label, dates, fortune }: FortuneCardProps) => {
   const sections = [
-    { label: '오늘의 에너지', text: fortune.energy },
-    { label: '조언', text: fortune.advice },
-    { label: '주의', text: fortune.caution },
-    { label: '연애·관계', text: fortune.relationship },
-    { label: '직업·재정', text: fortune.career },
+    { key: 'energy', label: '오늘의 에너지', text: fortune.energy },
+    { key: 'advice', label: '조언', text: fortune.advice },
+    { key: 'caution', label: '주의', text: fortune.caution },
+    { key: 'relationship', label: '연애·관계', text: fortune.relationship },
+    { key: 'career', label: '직업·재정', text: fortune.career },
   ];
 
   return (
@@ -29,8 +29,8 @@ const FortuneCard = ({ symbol, label, dates, fortune }: FortuneCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {sections.map(({ label: sectionLabel, text }) => (
-          <div key={sectionLabel}>
+        {sections.map(({ key, label: sectionLabel, text }) => (
+          <div key={key}>
             <p className="text-xs font-medium text-accent-gold mb-1">{sectionLabel}</p>
             <p className="text-sm leading-relaxed text-body">{text}</p>
           </div>
