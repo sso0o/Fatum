@@ -40,7 +40,7 @@ const ZodiacSelector = ({ fortunes }: ZodiacSelectorProps) => {
           symbol={selectedMeta.symbol}
           label={selectedMeta.label}
           dates={selectedMeta.dates}
-          content={selectedFortune.content}
+          fortune={selectedFortune}
         />
       )}
     </div>
