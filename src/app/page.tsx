@@ -1,24 +1,6 @@
-import { ZodiacSelector } from '@/features/horoscope/zodiac';
-import type { FortuneData } from '@/features/horoscope/zodiac';
+import Link from 'next/link';
 
-export const revalidate = 3600;
-
-async function getTodayFortunes(): Promise<FortuneData | null> {
-  const today = new Date().toISOString().split('T')[0];
-  const base = process.env.GITHUB_RAW_BASE_URL;
-  try {
-    const res = await fetch(`${base}/data/${today}.json`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
-
-export default async function HomePage() {
-  const data = await getTodayFortunes();
+export default function HomePage() {
   const today = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: 'long',
@@ -29,19 +11,33 @@ export default async function HomePage() {
     <main className="min-h-screen bg-canvas">
       <div className="mx-auto max-w-3xl px-4 py-16">
         <header className="mb-12 text-center">
-          <h1 className="mb-2 text-4xl font-medium tracking-tight text-ink">
-            🔮 Fatum
-          </h1>
+          <h1 className="mb-2 text-4xl font-medium tracking-tight text-ink">🔮 Fatum</h1>
           <p className="text-sm text-accent-gold">{today}</p>
         </header>
 
-        {data ? (
-          <ZodiacSelector fortunes={data.fortunes} />
-        ) : (
-          <p className="text-center text-sm text-muted">
-            오늘의 운세를 준비 중입니다.
-          </p>
-        )}
+        <div className="grid grid-cols-2 gap-4">
+          <Link
+            href="/horoscope/zodiac"
+            className="flex flex-col items-center gap-3 rounded-xl border border-hairline bg-surface-card p-8 transition-colors hover:border-accent-lavender"
+          >
+            <span className="text-5xl">✨</span>
+            <div className="text-center">
+              <p className="text-base font-medium text-ink">별자리</p>
+              <p className="mt-1 text-xs text-body">12개 별자리 오늘의 운세</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/horoscope/chinese-zodiac"
+            className="flex flex-col items-center gap-3 rounded-xl border border-hairline bg-surface-card p-8 transition-colors hover:border-accent-gold"
+          >
+            <span className="text-5xl">🐉</span>
+            <div className="text-center">
+              <p className="text-base font-medium text-ink">띠</p>
+              <p className="mt-1 text-xs text-body">12띠 오늘의 운세</p>
+            </div>
+          </Link>
+        </div>
       </div>
     </main>
   );
