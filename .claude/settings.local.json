@@ -4,7 +4,12 @@
       "mcp__c7f96ad4-96f6-4c7a-bbb6-4a0924ba8f4e__notion-fetch",
       "Bash(New-Item -ItemType File -Path \"C:\\\\IDEAWorkspace\\\\SYCHOI\\\\Fatum\\\\CLAUDE.md\" -Force)",
       "Bash(Out-Null)",
-      "PowerShell(New-Item -ItemType File -Path \"C:\\\\IDEAWorkspace\\\\SYCHOI\\\\Fatum\\\\CLAUDE.md\" -Force)"
+      "PowerShell(New-Item -ItemType File -Path \"C:\\\\IDEAWorkspace\\\\SYCHOI\\\\Fatum\\\\CLAUDE.md\" -Force)",
+      "Bash(date /T)",
+      "PowerShell([System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId\\([DateTime]::UtcNow, 'Korea Standard Time'\\).ToString\\('yyyy-MM-dd'\\))",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"data\")",
+      "mcp__c7f96ad4-96f6-4c7a-bbb6-4a0924ba8f4e__notion-create-pages",
+      "Bash(npx tsc *)"
     ]
   }
 }
