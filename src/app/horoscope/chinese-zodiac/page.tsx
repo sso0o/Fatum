@@ -1,4 +1,24 @@
-export default function ChineseZodiacPage() {
+import { ChineseZodiacSelector } from '@/features/horoscope/chinese-zodiac';
+import type { ChineseFortuneData } from '@/features/horoscope/chinese-zodiac';
+
+export const revalidate = 3600;
+
+async function getTodayFortunes(): Promise<ChineseFortuneData | null> {
+  const today = new Date().toISOString().split('T')[0];
+  const base = process.env.GITHUB_RAW_BASE_URL;
+  try {
+    const res = await fetch(`${base}/data/${today}-chinese-zodiac.json`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export default async function ChineseZodiacPage() {
+  const data = await getTodayFortunes();
   const today = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: 'long',
@@ -12,7 +32,11 @@ export default function ChineseZodiacPage() {
         <p className="text-sm text-accent-gold">{today}</p>
       </header>
 
-      <p className="text-center text-sm text-body">오늘의 운세를 준비 중입니다.</p>
+      {data ? (
+        <ChineseZodiacSelector fortunes={data.fortunes} />
+      ) : (
+        <p className="text-center text-sm text-body">오늘의 운세를 준비 중입니다.</p>
+      )}
     </>
   );
 }
