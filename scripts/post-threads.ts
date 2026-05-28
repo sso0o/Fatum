@@ -41,7 +41,20 @@ export function formatPost(dateStr: string, fortune: PiscesFortune): string {
   ].join('\n');
 }
 
+function truncateToLimit(text: string, limit = 500): string {
+  if (text.length <= limit) return text;
+  const lines = text.split('\n');
+  let result = '';
+  for (const line of lines) {
+    const next = result ? `${result}\n${line}` : line;
+    if (next.length > limit) break;
+    result = next;
+  }
+  return result;
+}
+
 async function postToThreads(text: string): Promise<void> {
+  text = truncateToLimit(text);
   const userId = process.env.THREADS_USER_ID;
   const token = process.env.THREADS_ACCESS_TOKEN;
 
