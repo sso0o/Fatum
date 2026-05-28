@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 interface Lucky {
   color: string;
   number: number;
@@ -11,6 +14,14 @@ interface PiscesFortune {
   relationship: string;
   career: string;
   lucky: Lucky;
+}
+
+interface ZodiacData {
+  date: string;
+  fortunes: {
+    pisces: PiscesFortune;
+    [key: string]: PiscesFortune;
+  };
 }
 
 export function formatPost(dateStr: string, fortune: PiscesFortune): string {
@@ -28,4 +39,79 @@ export function formatPost(dateStr: string, fortune: PiscesFortune): string {
     `💼 직장: ${career}`,
     `🍀 럭키: ${lucky.color} · ${lucky.number} · ${lucky.item}`,
   ].join('\n');
+}
+
+async function postToThreads(text: string): Promise<void> {
+  const userId = process.env.THREADS_USER_ID;
+  const token = process.env.THREADS_ACCESS_TOKEN;
+
+  if (!userId || !token) {
+    throw new Error('THREADS_USER_ID 또는 THREADS_ACCESS_TOKEN 환경변수가 없습니다.');
+  }
+
+  const base = `https://graph.threads.net/v1.0/${userId}`;
+
+  // 1단계: 컨테이너 생성
+  const createRes = await fetch(`${base}/threads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ media_type: 'TEXT', text, access_token: token }),
+  });
+
+  if (!createRes.ok) {
+    const body = await createRes.text();
+    throw new Error(`컨테이너 생성 실패 (${createRes.status}): ${body}`);
+  }
+
+  const { id: creationId } = (await createRes.json()) as { id: string };
+
+  // 2단계: 게시
+  const publishRes = await fetch(`${base}/threads/publish`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ creation_id: creationId, access_token: token }),
+  });
+
+  if (!publishRes.ok) {
+    const body = await publishRes.text();
+    throw new Error(`게시 실패 (${publishRes.status}): ${body}`);
+  }
+
+  const result = (await publishRes.json()) as { id: string };
+  console.log(`포스팅 완료: https://www.threads.net/t/${result.id}`);
+}
+
+function toLocalDateString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+async function main(): Promise<void> {
+  const dateStr = toLocalDateString(new Date());
+  const filePath = path.join(process.cwd(), 'data', `${dateStr}-zodiac.json`);
+
+  if (!fs.existsSync(filePath)) {
+    console.error(`운세 파일이 없습니다: ${filePath}`);
+    process.exit(1);
+  }
+
+  const raw = fs.readFileSync(filePath, 'utf-8');
+  const data = JSON.parse(raw) as ZodiacData;
+  const fortune = data.fortunes.pisces;
+
+  const text = formatPost(dateStr, fortune);
+  console.log('--- 포스팅 내용 ---');
+  console.log(text);
+  console.log('-------------------');
+
+  await postToThreads(text);
+}
+
+if (require.main === module) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
