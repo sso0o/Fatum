@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
 interface Lucky {
   color: string;
   number: number;
@@ -14,14 +11,6 @@ interface PiscesFortune {
   relationship: string;
   career: string;
   lucky: Lucky;
-}
-
-interface ZodiacData {
-  date: string;
-  fortunes: {
-    pisces: PiscesFortune;
-    [key: string]: PiscesFortune;
-  };
 }
 
 export function formatPost(dateStr: string, fortune: PiscesFortune): string {
