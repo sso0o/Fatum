@@ -54,8 +54,11 @@ async function postToThreads(text: string): Promise<void> {
   // 1단계: 컨테이너 생성
   const createRes = await fetch(`${base}/threads`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ media_type: 'TEXT', text, access_token: token }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ media_type: 'TEXT', text }),
   });
 
   if (!createRes.ok) {
@@ -68,8 +71,11 @@ async function postToThreads(text: string): Promise<void> {
   // 2단계: 게시
   const publishRes = await fetch(`${base}/threads/publish`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ creation_id: creationId, access_token: token }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ creation_id: creationId }),
   });
 
   if (!publishRes.ok) {
