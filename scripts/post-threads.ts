@@ -69,7 +69,7 @@ async function postToThreads(text: string): Promise<void> {
   const { id: creationId } = (await createRes.json()) as { id: string };
 
   // 2단계: 게시
-  const publishRes = await fetch(`${base}/threads/publish`, {
+  const publishRes = await fetch(`${base}/threads_publish`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
