@@ -7,7 +7,7 @@ async function getTodayFortunes(): Promise<FortuneData | null> {
   const today = new Date().toISOString().split('T')[0];
   const base = process.env.GITHUB_RAW_BASE_URL;
   try {
-    const res = await fetch(`${base}/data/${today}.json`, {
+    const res = await fetch(`${base}/data/${today}-zodiac.json`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
