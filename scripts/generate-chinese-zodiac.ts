@@ -12,7 +12,7 @@ async function main() {
   if (context.julgki) console.log(`절기: ${context.julgki}`);
 
   const response = await client.messages.create({
-    model: 'claude-opus-4-7',
+    model: 'claude-sonnet-4-6',
     max_tokens: 8000,
     system: CHINESE_ZODIAC_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: buildUserMessage(context) }],
