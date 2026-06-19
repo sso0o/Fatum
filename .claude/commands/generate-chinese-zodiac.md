@@ -41,9 +41,21 @@ const jiji = JIJI[jijiIdx];
 const ohaeng = OHAENG[cheonganIdx];
 const eumoyang = cheonganIdx % 2 === 0 ? '양' : '음';
 const julgki = JULGKI_TABLE[dateStr] || '없음';
+const SIGNS = ['rat','ox','tiger','rabbit','dragon','snake','horse','goat','monkey','rooster','dog','pig'];
+function getLuckyNumber(date, sign) {
+  const str = date + '|' + sign;
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (Math.imul(h, 16777619) >>> 0);
+  }
+  return h % 100;
+}
+const luckyNumbers = SIGNS.map(s => s + '=' + getLuckyNumber(dateStr, s)).join(', ');
 console.log('date=' + dateStr);
 console.log('ilchin=' + cheongan + jiji + '일 (' + ohaeng + ' 기운, ' + eumoyang + ')');
 console.log('julgki=' + julgki);
+console.log('luckyNumbers=' + luckyNumbers);
 "`
 
 ## 역할
@@ -52,12 +64,19 @@ console.log('julgki=' + julgki);
 
 ## 원칙
 
-- 정중하고 따뜻한 현대 한국어로 작성합니다
+- 정중한 현대 한국어로 작성합니다. 매일 긍정적일 필요는 없으며, 조심해야 할 날은 그 기운을 솔직하게 담습니다
 - 오늘의 천간지지·오행을 각 띠의 고유 오행과 연결해 상생·상극 관계를 반영합니다
 - 절기가 있는 날은 해당 절기의 기운을 자연스럽게 언급합니다
 - 각 운세는 구체적이고 실생활에 적용 가능해야 합니다
 - 복합 한자 표현에는 괄호로 한국어 음을 병기합니다 (예: 癸酉(계유), 癸水(계수), 水生木(수생목))
 - 단독 오행 한자(水, 金, 木, 火, 土)가 한국어 문장 안에 단독으로 쓰일 때는 음을 생략합니다
+
+## 다양성 지침
+
+- 비유와 소재를 날마다 다른 생활 영역에서 끌어옵니다 (음식 준비, 이동/길, 대화, 공간 정돈, 날씨, 식물, 장인의 손길 등을 번갈아 활용)
+- 아래 표현은 가급적 피합니다: "기운이 넘칩니다", "좋은 기회입니다", "신중함이 필요합니다", "긍정적인 하루", "소통이 중요합니다", "마음을 열어보세요"
+- energy·advice·caution 각 필드가 서로 다른 생활 장면을 다루도록 합니다
+- 같은 띠라도 날마다 다른 각도(심리, 행동, 환경, 관계)에서 접근합니다
 
 ## 띠별 오행 프로파일
 
@@ -115,6 +134,7 @@ console.log('julgki=' + julgki);
 ## 작업
 
 위 Context에서 얻은 date, ilchin, julgki를 사용해 12띠 전체의 운세를 생성하고,
+lucky.number는 반드시 luckyNumbers에서 해당 띠의 값을 그대로 사용합니다.
 아래 형식의 순수 JSON을 `data/{date}-chinese-zodiac.json` 경로에 Write 도구로 저장합니다.
 
 코드 블록 없이 Write 도구만 사용해 파일을 저장하고, 완료 메시지를 출력합니다.
