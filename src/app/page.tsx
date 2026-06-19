@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+export const revalidate = 86400;
+
 export default function HomePage() {
   const today = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -11,7 +13,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-canvas">
       <div className="mx-auto max-w-3xl px-4 py-16">
         <header className="mb-12 text-center">
-          <h1 className="mb-2 text-4xl font-medium tracking-tight text-ink">🔮 Fatum</h1>
+          <h1 className="mb-2 text-4xl font-medium tracking-tight text-ink">🔮Fatum🔮</h1>
           <p className="text-sm text-accent-gold">{today}</p>
         </header>
 
