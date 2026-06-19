@@ -53,6 +53,21 @@ function truncateToLimit(text: string, limit = 500): string {
   return result;
 }
 
+async function waitForContainer(base: string, creationId: string, token: string): Promise<void> {
+  const maxAttempts = 24; // 최대 2분 (5초 * 24회)
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const res = await fetch(`${base}/threads/${creationId}?fields=status,error_message`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!res.ok) continue;
+    const { status } = (await res.json()) as { status: string };
+    if (status === 'FINISHED') return;
+    if (status === 'ERROR') throw new Error(`컨테이너 준비 실패: ${status}`);
+  }
+  throw new Error('컨테이너 준비 타임아웃 (2분 초과)');
+}
+
 async function postToThreads(text: string): Promise<void> {
   text = truncateToLimit(text);
   const userId = process.env.THREADS_USER_ID;
@@ -80,6 +95,9 @@ async function postToThreads(text: string): Promise<void> {
   }
 
   const { id: creationId } = (await createRes.json()) as { id: string };
+
+  // 컨테이너가 FINISHED 상태가 될 때까지 폴링 (최대 2분)
+  await waitForContainer(base, creationId, token);
 
   // 2단계: 게시
   const publishRes = await fetch(`${base}/threads_publish`, {

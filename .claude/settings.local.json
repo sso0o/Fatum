@@ -9,7 +9,20 @@
       "PowerShell([System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId\\([DateTime]::UtcNow, 'Korea Standard Time'\\).ToString\\('yyyy-MM-dd'\\))",
       "PowerShell(New-Item -ItemType Directory -Force -Path \"data\")",
       "mcp__c7f96ad4-96f6-4c7a-bbb6-4a0924ba8f4e__notion-create-pages",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(powershell -Command \"New-Item -ItemType Directory -Force -Path 'C:\\\\IDEAWorkspace\\\\SYCHOI\\\\Fatum\\\\src\\\\features\\\\horoscope\\\\chinese-zodiac\\\\types' | Out-Null; New-Item -ItemType Directory -Force -Path 'C:\\\\IDEAWorkspace\\\\SYCHOI\\\\Fatum\\\\src\\\\features\\\\horoscope\\\\chinese-zodiac\\\\constants' | Out-Null; Write-Host 'Directories created'\")",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npx jest *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s http://localhost:3000/horoscope/chinese-zodiac)",
+      "Skill(generate-zodiac)",
+      "Bash(node:*)",
+      "Bash(npx tsx:*)",
+      "Bash(git push *)",
+      "Skill(generate-chinese-zodiac)",
+      "Skill(generate-chinese-zodiac:*)",
+      "PowerShell(npx tsc --noEmit 2>&1)"
     ]
   }
 }
